@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Daisy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS Art สำหรับดอกเดซี่ */
+        :root {
+            --flower-color: #ffffff;
+            --flower-dark: #f0f0f0;
+            --center-color: #ffd700;
+            --stem-color: #4a9c2d;
+            /* Valentine's gradient – deeper tones so the white daisy pops */
+            --bg-gradient-start: #e8a0b8;
+            --bg-gradient-mid: #f0b8c8;
+            --bg-gradient-end: #fce4ec;
+        }
+
+        body {
+            background: linear-gradient(
+                180deg,
+                var(--bg-gradient-start) 0%,
+                var(--bg-gradient-mid) 50%,
+                var(--bg-gradient-end) 100%
+            ) !important;
+            min-height: 100vh;
+        }
+
+        .flower-wrapper {
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .flower-head {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            z-index: 10;
+        }
+
+        .petal {
+            position: absolute;
+            width: 34px;     /* กลีบแคบลง */
+            height: 95px;    /* กลีบยาวขึ้น */
+            background: linear-gradient(to top, var(--flower-dark), var(--flower-color));
+            border-radius: 50px; /* ทรงมนยาว */
+            left: 53px;      /* จัดกึ่งกลาง (140-34)/2 */
+            top: 5px;
+            transform-origin: bottom center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+        }
+
+        /* จัดวางกลีบดอกไม้ 12 ทิศ (360 / 12 = 30 องศา) */
+        .p1 { transform: rotate(0deg) translateY(-25px); }
+        .p2 { transform: rotate(30deg) translateY(-25px); }
+        .p3 { transform: rotate(60deg) translateY(-25px); }
+        .p4 { transform: rotate(90deg) translateY(-25px); }
+        .p5 { transform: rotate(120deg) translateY(-25px); }
+        .p6 { transform: rotate(150deg) translateY(-25px); }
+        .p7 { transform: rotate(180deg) translateY(-25px); }
+        .p8 { transform: rotate(210deg) translateY(-25px); }
+        .p9 { transform: rotate(240deg) translateY(-25px); }
+        .p10 { transform: rotate(270deg) translateY(-25px); }
+        .p11 { transform: rotate(300deg) translateY(-25px); }
+        .p12 { transform: rotate(330deg) translateY(-25px); }
+
+        .center {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, var(--center-color));
+            border-radius: 50%;
+            top: 75px; /* ปรับตำแหน่งเกสร */
+            left: 42.5px;
+            z-index: 20;
+            box-shadow: inset 0 0 15px rgba(218, 165, 32, 0.4), 0 2px 5px rgba(0,0,0,0.1);
+            /* เพิ่ม texture ให้เกสรดูเหมือนจริง */
+            background-image: radial-gradient(#d4af37 15%, transparent 16%), radial-gradient(#d4af37 15%, transparent 16%);
+            background-size: 6px 6px;
+            background-position: 0 0, 3px 3px;
+        }
+
+        .stem {
+            width: 10px;
+            height: 220px;
+            background: linear-gradient(to right, #387a22, var(--stem-color));
+            margin: -30px auto 0;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 60px;
+            height: 25px;
+            background-color: var(--stem-color);
+            border-radius: 0 50px 0 50px;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .leaf.left {
+            top: 80px;
+            left: -50px;
+            transform: rotate(-20deg);
+        }
+
+        .leaf.right {
+            top: 130px;
+            right: -50px;
+            transform: rotate(200deg);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .heart-beat {
+            animation: beat 1.5s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        @keyframes beat {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.1); }
+            20% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 3s infinite;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center overflow-hidden relative">
+
+    <!-- Sparkles Background -->
+    <div class="absolute inset-0 pointer-events-none" id="sparkles"></div>
+
+    <!-- Main Container -->
+    <div class="flower-wrapper mb-8 cursor-pointer group" onclick="toggleBloom()">
+        <div class="flower-head" id="flowerHead">
+            <!-- 12 Petals for Daisy -->
+            <div class="petal p1"></div>
+            <div class="petal p2"></div>
+            <div class="petal p3"></div>
+            <div class="petal p4"></div>
+            <div class="petal p5"></div>
+            <div class="petal p6"></div>
+            <div class="petal p7"></div>
+            <div class="petal p8"></div>
+            <div class="petal p9"></div>
+            <div class="petal p10"></div>
+            <div class="petal p11"></div>
+            <div class="petal p12"></div>
+            <div class="center"></div>
+        </div>
+        <div class="stem">
+            <div class="leaf left"></div>
+            <div class="leaf right"></div>
+        </div>
+    </div>
+
+    <!-- Text Message Area -->
+    <div class="text-center z-10 px-4">
+        <h1 class="text-4xl md:text-5xl font-bold text-slate-700 drop-shadow-sm font-serif mb-4">
+            Happy Valentine's Day
+        </h1>
+        <p class="text-slate-600 text-lg md:text-xl font-light heart-beat">
+            You are my sunshine ☀️
+        </p>
+        
+        <!-- Interactive Button -->
+        <button onclick="changeColor()" class="mt-8 px-6 py-2 bg-white hover:bg-yellow-50 text-slate-600 rounded-full text-sm transition-all shadow-md backdrop-blur-sm border border-slate-100">
+            Daisy's color can be changed
+        </button>
+    </div>
+
+    <script>
+        // สร้างประกายวิบวับ
+        const sparklesContainer = document.getElementById('sparkles');
+        for (let i = 0; i < 30; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            sparklesContainer.appendChild(sparkle);
+        }
+
+        // ฟังก์ชันเปลี่ยนสีดอกไม้แบบสุ่ม (โทนพาสเทลสำหรับเดซี่)
+        function changeColor() {
+            const colors = [
+                { main: '#ffffff', dark: '#f0f0f0' }, // White Daisy
+                { main: '#ffb7b2', dark: '#ff9e99' }, // Pastel Pink
+                { main: '#b2ebf2', dark: '#80deea' }, // Pastel Blue
+                { main: '#e1bee7', dark: '#ce93d8' }, // Lavender
+                { main: '#ffccbc', dark: '#ffab91' }, // Peach
+                { main: '#fff9c4', dark: '#fff59d' }  // Pale Yellow
+            ];
+            
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const root = document.documentElement;
+            
+            root.style.setProperty('--flower-color', randomColor.main);
+            root.style.setProperty('--flower-dark', randomColor.dark);
+        }
+
+        // ฟังก์ชันเล่นกับกลีบดอกไม้ (หุบ/บาน)
+        let isBloomed = true;
+        function toggleBloom() {
+            const petals = document.querySelectorAll('.petal');
+            isBloomed = !isBloomed;
+            
+            petals.forEach((petal, index) => {
+                const angle = index * 30; // 360 / 12 = 30 องศาต่อกลีบ
+                if (!isBloomed) {
+                    // หุบดอก
+                    petal.style.transform = `rotate(${angle}deg) translateY(-25px) scale(0.3)`;
+                    petal.style.left = '53px'; // Center position
+                } else {
+                    // บานออก
+                    petal.style.transform = `rotate(${angle}deg) translateY(-25px) scale(1)`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
